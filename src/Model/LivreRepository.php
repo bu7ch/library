@@ -34,6 +34,7 @@ class LivreRepository
             'INSERT INTO livres (titre, auteur, annee) VALUES (?, ?, ?)'
         );
         $stmt->execute([$l->getTitre(), $l->getAuteur(), $l->getAnnee()]);
+        $l->setId((int) $this->pdo->lastInsertId());
     }
 
     public function update(Livre $l): void
