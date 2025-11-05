@@ -1,0 +1,29 @@
+# Composer
+/vendor/
+composer.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.env
+docker-compose.override.yml
+
+# Logs
+*.log
+
+# Tests / temp
+test_part1.php
+.phpunit.result.cache
+.phpunit.cache/
+
+# Sensible (si tu crées un .env local)
+.env.local
