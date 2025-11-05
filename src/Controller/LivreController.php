@@ -32,7 +32,14 @@ class LivreController
 
     public function create(): void
     {
-        $this->render('livre/create');
+        $ol = new \App\Service\OpenLibrary();
+        $results = [];
+    
+        if (!empty($_GET['ol'])) {
+            $results = $ol->search($_GET['ol']); // on reuse le champ « ol »
+        }
+    
+        $this->render('livre/create', ['results' => $results]);
     }
 
     public function store(): void

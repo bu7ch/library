@@ -5,12 +5,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Controller\LivreController;
 
-/* ---------- découpe l’URI ---------- */
 $uri  = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $path = trim($uri, '/');
 $segments = array_values(array_filter(explode('/', $path)));
 
-/* ---------- route unique ---------- */
 try {
     if (($segments[0] ?? '') !== 'livres') {
         throw new RuntimeException('Page non trouvée');
@@ -20,7 +18,6 @@ try {
     $id         = (int) ($segments[1] ?? 0);
     $action     = $segments[2] ?? null;
 
-    /* ------ liste ------ */
     if (!$id) {
         match ($segments[1] ?? '') {
             'create' => $controller->create(),
@@ -29,8 +26,14 @@ try {
         };
         return;
     }
+    elseif ($segments[0] === 'api' && $segments[1] === 'ol-search') {
+        header('Content-Type: application/json');
+        $q = $_GET['q'] ?? '';
+        $ol = new \App\Service\OpenLibrary();
+        echo json_encode($ol->search($q));
+        return;
+    }
 
-    /* ------ actions sur un livre ------ */
     match ($action) {
         'edit'   => $controller->edit($id),
         'update' => $controller->update($id),
