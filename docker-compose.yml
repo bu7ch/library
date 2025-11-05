@@ -1,0 +1,44 @@
+
+services:
+  php:
+    build: .
+    container_name: biblio-php
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: bibliotheque
+      DB_USER: root
+      DB_PASS: secret
+
+  db:
+    image: mysql:8
+    container_name: biblio-db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: bibliotheque
+    volumes:
+      - db-data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: biblio-pma
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: secret
+    depends_on:
+      - db
+
+volumes:
+  db-data:
