@@ -10,7 +10,7 @@ namespace App\Model;
     ){}
 
     public function getId(): int{return $this->id;}
-    public function getTitre(): string{return $this->tittre;}
+    public function getTitre(): string{return $this->titre;}
     public function getAuteur(): string{return $this->auteur;}
     public function getAnnee(): ?int{return $this->id;}
 
