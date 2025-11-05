@@ -7,10 +7,19 @@ use App\Controller\LivreController;
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = trim($uri, '/');
+$segments = explode('/', $uri);
 
 try {
-    if ($uri === 'livres') {
-        (new LivreController())->index();
+    if ($segments[0] === 'livres') {
+        $controller = new LivreController();
+
+        if (!isset($segments[1])) {
+            $controller->index();                       // /livres
+        } elseif (is_numeric($segments[1])) {
+            $controller->show((int)$segments[1]);       // /livres/5
+        } else {
+            throw new Exception("Route inconnue");
+        }
     } else {
         throw new Exception("Route inconnue");
     }

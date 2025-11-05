@@ -5,22 +5,34 @@ use App\Model\LivreRepository;
 
 class LivreController
 {
+    private LivreRepository $repo;
+
+    public function __construct()
+    {
+        $this->repo = new LivreRepository();
+    }
+
     public function index(): void
     {
-        $repo = new LivreRepository();
-        $livres = $repo->findAll();
+        $livres = $this->repo->findAll();
+        $this->render('livre/index', ['livres' => $livres]);
+    }
 
-        echo '<h1>📚 Liste des livres</h1>';
-        echo '<table border="1" cellpadding="6">';
-        echo '<tr><th>ID</th><th>Titre</th><th>Auteur</th><th>Année</th></tr>';
-        foreach ($livres as $l) {
-            echo '<tr>';
-            echo '<td>' . $l->getId() . '</td>';
-            echo '<td>' . htmlspecialchars($l->getTitre()) . '</td>';
-            echo '<td>' . htmlspecialchars($l->getAuteur()) . '</td>';
-            echo '<td>' . $l->getAnnee() . '</td>';
-            echo '</tr>';
+    public function show(int $id): void
+    {
+        $livre = $this->repo->find($id);
+        if (!$livre) {
+            throw new \Exception("Livre introuvable");
         }
-        echo '</table>';
+        $this->render('livre/show', ['livre' => $livre]);
+    }
+
+    private function render(string $view, array $data = []): void
+    {
+        extract($data);
+        ob_start();
+        require __DIR__ . '/../View/' . $view . '.php';
+        $content = ob_get_clean();
+        require __DIR__ . '/../View/layout.php';
     }
 }
